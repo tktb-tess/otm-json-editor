@@ -1,7 +1,8 @@
 import { z } from 'zod';
 import { pgConfSchema, storageKeys, type PageConfig } from './decl';
 
-const initial = (): PageConfig => {
+const initial = ((): PageConfig => {
+  // 初期値
   const _init: PageConfig = {
     colorScheme: 'light',
   };
@@ -20,8 +21,8 @@ const initial = (): PageConfig => {
     }
     return _init;
   }
-};
+})();
 
-const pageConfig = $state(initial());
+const pageConfig = $state(initial);
 
 export { pageConfig };
