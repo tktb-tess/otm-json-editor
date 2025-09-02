@@ -47,5 +47,5 @@
   >
     Toggle color scheme
   </button>
-  
 </div>
+<p>{time.toLocaleDateString('ja-JP')}</p>
