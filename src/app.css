@@ -1,2 +1,69 @@
 @import 'tailwindcss';
 
+@theme {
+  --font-sans: 'Inter', 'Arial', 'Helvetica Neue', 'Noto Sans JP',
+    'Source Han Sans JP', 'BIZ UDPGothic', 'Yu Gothic UI', 'Hiragino Sans',
+    'Hiragino Kaku Gothic ProN', sans-serif, 'Noto Color Emoji',
+    'Segoe UI Emoji', system-ui;
+  --font-serif: 'Charis SIL', 'Times New Roman', 'Century', 'Noto Serif JP',
+    'Source Han Serif JP', 'BIZ UDPMincho', 'Yu Mincho', 'Hiragino Serif',
+    'Hiragino Mincho ProN', serif, 'Noto Color Emoji', 'Segoe UI Emoji',
+    system-ui;
+}
+
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    @slot;
+  }
+
+  &:where([data-color-scheme='dark'] &) {
+    @slot;
+  }
+}
+
+@custom-variant any-hover {
+  @media (any-hover: hover) {
+    &:hover {
+      @slot;
+    }
+  }
+}
+
+@utility btn-1 {
+  @apply bg-black any-hover:opacity-60 transition-opacity text-white dark:bg-white dark:text-black rounded px-2 py-1;
+}
+
+@layer theme {
+  html {
+    color-scheme: light dark;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-white dark:bg-black min-h-screen transition-colors duration-[200ms];
+  }
+
+  p,
+  div,
+  button,
+  input,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  textarea,
+  pre,
+  code {
+    @apply text-black dark:text-white;
+  }
+
+  button,
+  input[type='button'],
+  input[type='radio'],
+  input[type='checkbox'] {
+    @apply cursor-pointer;
+  }
+}
