@@ -25,6 +25,7 @@ const initial = ((): PageConfig => {
 })();
 
 const pageConfig = writable(initial);
+
 pageConfig.subscribe((val) => {
   localStorage.setItem(storageKeys.pageConfig, JSON.stringify(val));
   // console.log('set to localStorage!');

@@ -1,16 +1,17 @@
 <script lang="ts">
-  import { tz } from '@date-fns/tz';
-  import { onMount } from 'svelte';
   import UploadFile from './lib/components/upload-file.svelte';
   import ToggleColorSchemeBtn from './lib/components/toggle-color-scheme-btn.svelte';
-  const tzTokyo = tz('Asia/Tokyo');
-  let date = $state(Date.now());
-  const tzdate = $derived(tzTokyo(date));
+  import { tz } from '@date-fns/tz'
+  import { onMount } from 'svelte';
+  let tokyoTz = tz('Asia/Tokyo');
+  let now = $state(Date.now());
+  const date = $derived(tokyoTz(now));
 
   onMount(() => {
     const id = setInterval(() => {
-      date = Date.now();
+      now = Date.now();
     }, 1000);
+
     return () => clearInterval(id);
   });
 </script>
@@ -26,6 +27,7 @@
     {import.meta.env.VITE_APP_NAME}
   </h1>
 </header>
-<main class="flex flex-col gap-2 *:max-w-full">
+<main class="flex flex-col gap-2 *:max-w-full p-2 w-full max-w-320 mx-auto">
   <UploadFile />
+  <p class="text-center">{date.toLocaleString('ja-JP')}</p>
 </main>

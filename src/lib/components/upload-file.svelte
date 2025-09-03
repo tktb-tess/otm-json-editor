@@ -39,9 +39,8 @@
   onchange={async ({ currentTarget }) => {
     try {
       const file = currentTarget.files?.item(0);
-      if (!file) {
-        return;
-      }
+
+      if (!file) return;
 
       if (file.type !== 'application/json') {
         fileResult = {
@@ -99,14 +98,11 @@
     <p class="text-red-700 dark:text-yellow-200">
       ファイルの読み込み中にエラーが発生しました。
     </p>
-    <p>
-      {error.name}:
-      {#if error instanceof z.ZodError}
-        {@const pretty = z.prettifyError(error)}
-        {pretty}
-      {:else}
-        {error.message}
-      {/if}
-    </p>
+    {#if error instanceof z.ZodError}
+      {@const pretty = z.prettifyError(error)}
+      <pre>{error.name}: {pretty}</pre>
+    {:else}
+      <pre>{error.name}: {error.message}</pre>
+    {/if}
   </div>
 {/if}
