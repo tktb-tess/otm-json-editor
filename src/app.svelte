@@ -16,6 +16,12 @@
 <svelte:head>
   <title>{import.meta.env.VITE_APP_NAME}</title>
 </svelte:head>
-<div class="min-h-screen grid place-content-center">
-  <p class="text-4xl font-extralight">{tzdate.toLocaleString('ja-JP')}</p>
-</div>
+<header>
+  <h1 class="text-center font-extralight text-5xl lg:text-6xl">
+    {import.meta.env.VITE_APP_NAME}
+  </h1>
+</header>
+<main class="flex flex-col gap-2 *:max-w-full">
+  
+</main>
+<footer></footer>
