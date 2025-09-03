@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { pgConfSchema, storageKeys, type PageConfig } from './decl';
+import { writable } from 'svelte/store';
 
 const initial = ((): PageConfig => {
   // 初期値
@@ -23,6 +24,10 @@ const initial = ((): PageConfig => {
   }
 })();
 
-const pageConfig = $state(initial);
+const pageConfig = writable(initial);
+pageConfig.subscribe((val) => {
+  localStorage.setItem(storageKeys.pageConfig, JSON.stringify(val));
+  console.log('set to localStorage!');
+});
 
 export { pageConfig };

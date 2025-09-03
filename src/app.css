@@ -44,6 +44,10 @@
     @apply bg-white dark:bg-black min-h-screen transition-colors duration-[200ms];
   }
 
+  html {
+    -webkit-tap-highlight-color: revert;
+  }
+
   p,
   div,
   button,
