@@ -9,6 +9,8 @@
     'Source Han Serif JP', 'BIZ UDPMincho', 'Yu Mincho', 'Hiragino Serif',
     'Hiragino Mincho ProN', serif, 'Noto Color Emoji', 'Segoe UI Emoji',
     system-ui;
+
+  --color-mnlila: oklch(0.18 0.0957 296);
 }
 
 @custom-variant dark {
@@ -30,7 +32,7 @@
 }
 
 @utility btn-1 {
-  @apply bg-black any-hover:opacity-60 transition-opacity text-white dark:bg-white dark:text-black rounded px-2 py-1;
+  @apply bg-mnlila any-hover:opacity-60 transition-opacity text-white dark:bg-white dark:text-black rounded px-2 py-1;
 }
 
 @layer base {
@@ -39,7 +41,7 @@
     color-scheme: light dark;
   }
   body {
-    @apply bg-white dark:bg-black min-h-screen transition-colors duration-[200ms];
+    @apply bg-white dark:bg-mnlila min-h-screen transition-colors duration-[120ms];
   }
 
   p,
