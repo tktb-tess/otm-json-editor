@@ -1,34 +1,13 @@
-import { z } from 'zod';
-import { pgConfSchema, storageKeys, type PageConfig } from './decl';
-import { writable } from 'svelte/store';
+import { writableWithStorage } from './writable-with-storage';
+import { pgConfSchema, storageKeys } from './decl';
 
-const initial = ((): PageConfig => {
-  // 初期値
-  const _init: PageConfig = {
+const pageConfig = writableWithStorage(
+  storageKeys.pageConfig,
+  'local',
+  pgConfSchema,
+  {
     colorScheme: 'light',
-  };
-
-  const json = localStorage.getItem(storageKeys.pageConfig);
-  if (!json) return _init;
-  try {
-    return pgConfSchema.parse(JSON.parse(json));
-  } catch (e: unknown) {
-    if (e instanceof z.ZodError) {
-      console.error(e.name, ...e.issues, ...z.treeifyError(e).errors);
-    } else if (e instanceof Error) {
-      console.error(e.name, e.message);
-    } else {
-      console.error(e);
-    }
-    return _init;
   }
-})();
-
-const pageConfig = writable(initial);
-
-pageConfig.subscribe((val) => {
-  localStorage.setItem(storageKeys.pageConfig, JSON.stringify(val));
-  // console.log('set to localStorage!');
-});
+);
 
 export { pageConfig };
