@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import z from 'zod';
 
 export const pgConfSchema = z.object({
   colorScheme: z.literal(['light', 'dark']),

@@ -17,7 +17,7 @@
   <title>{import.meta.env.VITE_APP_NAME}</title>
 </svelte:head>
 <header>
-  <h1 class="text-center font-extralight text-5xl lg:text-6xl">
+  <h1 class="text-center font-extralight text-4xl lg:text-5xl xl:text-6xl my-5">
     {import.meta.env.VITE_APP_NAME}
   </h1>
 </header>

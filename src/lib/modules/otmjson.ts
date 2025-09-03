@@ -77,7 +77,19 @@ const otmjsonv2Schema = z.looseObject({
 const otmjson_brand_ = Symbol();
 
 export const otmjsonSchema = z
-  .union([otmjsonv1Schema, otmjsonv2Schema])
+  .discriminatedUnion('version', [otmjsonv1Schema, otmjsonv2Schema])
   .brand(otmjson_brand_);
 
 export type OTMJSON = z.infer<typeof otmjsonSchema>;
+
+export const parseOtmjson = (json: string): OTMJSON | Error => {
+  try {
+    return otmjsonSchema.parse(JSON.parse(json));
+  } catch (e) {
+    if (e instanceof Error) {
+      return e;
+    } else {
+      return Error(`unidentified error: ${e}`);
+    }
+  }
+};
