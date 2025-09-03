@@ -33,19 +33,13 @@
   @apply bg-black any-hover:opacity-60 transition-opacity text-white dark:bg-white dark:text-black rounded px-2 py-1;
 }
 
-@layer theme {
-  html {
-    color-scheme: light dark;
-  }
-}
-
 @layer base {
-  body {
-    @apply bg-white dark:bg-black min-h-screen transition-colors duration-[200ms];
-  }
-
   html {
     -webkit-tap-highlight-color: revert;
+    color-scheme: light dark;
+  }
+  body {
+    @apply bg-white dark:bg-black min-h-screen transition-colors duration-[200ms];
   }
 
   p,

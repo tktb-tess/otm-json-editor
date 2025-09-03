@@ -1,6 +1,7 @@
 <script lang="ts">
   import { tz } from '@date-fns/tz';
   import { onMount } from 'svelte';
+  import UploadFile from './lib/components/upload-file.svelte';
   const tzTokyo = tz('Asia/Tokyo');
   let date = $state(Date.now());
   const tzdate = $derived(tzTokyo(date));
@@ -22,6 +23,6 @@
   </h1>
 </header>
 <main class="flex flex-col gap-2 *:max-w-full">
-  
+  <UploadFile />
 </main>
 <footer></footer>

@@ -1,29 +1,39 @@
 import z from 'zod';
 
-const entrySchema = z.object({
+export const entrySchema = z.object({
   id: z.number(),
   form: z.string(),
 });
 
-const translationSchema = z.object({
+export type Entry = z.infer<typeof entrySchema>;
+
+export const translationSchema = z.object({
   title: z.string(),
   forms: z.string().array(),
 });
 
-const contentSchema = z.object({
+export type Translation = z.infer<typeof translationSchema>;
+
+export const contentSchema = z.object({
   title: z.string(),
   text: z.string(),
 });
 
-const variationSchema = z.object({
+export type Content = z.infer<typeof translationSchema>;
+
+export const variationSchema = z.object({
   title: z.string(),
   form: z.string(),
 });
 
-const relationSchema = z.object({
+export type Variation = z.infer<typeof variationSchema>;
+
+export const relationSchema = z.object({
   title: z.string(),
   entry: entrySchema,
 });
+
+export type Relation = z.infer<typeof relationSchema>;
 
 const wordObj = {
   entry: entrySchema,
@@ -34,10 +44,13 @@ const wordObj = {
   relations: relationSchema.array(),
 };
 
-const wordSchema = z.object(wordObj);
-const wordv2Schema = z.looseObject(wordObj);
+export const wordv1Schema = z.object(wordObj);
+export const wordv2Schema = z.looseObject(wordObj);
 
-const exampleSchema = z.object({
+export type Wordv1 = z.infer<typeof wordv1Schema>;
+export type Wordv2 = z.infer<typeof wordv2Schema>;
+
+export const zpdicExampleSchema = z.object({
   id: z.number(),
   sentence: z.string(),
   translation: z.string(),
@@ -51,10 +64,12 @@ const exampleSchema = z.object({
   offer: z.object({
     catalog: z.string(),
     number: z.number(),
-  }),
+  }).optional(),
 });
 
-const zpdicConfigSchema = z.object({
+export type ZpDICExample = z.infer<typeof zpdicExampleSchema>;
+
+export const zpdicConfigSchema = z.object({
   explanation: z.string(),
   punctuations: z.string().array(),
   ignoredPattern: z.string(),
@@ -62,15 +77,17 @@ const zpdicConfigSchema = z.object({
   enableMarkdown: z.boolean(),
 });
 
-const otmjsonv1Schema = z.object({
+export type ZpDICConfig = z.infer<typeof zpdicConfigSchema>;
+
+export const otmjsonv1Schema = z.object({
   version: z.literal(1).optional(),
-  words: wordSchema.array(),
+  words: wordv1Schema.array(),
 });
 
-const otmjsonv2Schema = z.looseObject({
+export const otmjsonv2Schema = z.looseObject({
   version: z.literal(2),
   words: wordv2Schema.array(),
-  examples: exampleSchema.array().optional(),
+  examples: zpdicExampleSchema.array().optional(),
   zpdicOnline: zpdicConfigSchema.optional(),
 });
 
@@ -80,7 +97,10 @@ export const otmjsonSchema = z
   .discriminatedUnion('version', [otmjsonv1Schema, otmjsonv2Schema])
   .brand(otmjson_brand_);
 
+export type OTMJSONv1 = z.infer<typeof otmjsonv1Schema>;
+export type OTMJSONv2 = z.infer<typeof otmjsonv2Schema>;
 export type OTMJSON = z.infer<typeof otmjsonSchema>;
+export type ZpDICOTMJSON = Required<OTMJSONv2>;
 
 export const parseOtmjson = (json: string): OTMJSON | Error => {
   try {
