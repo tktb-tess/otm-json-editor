@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { pageConfig } from '../modules/storage.svelte';
+  import { pageConfig } from '../modules/pageconfig.svelte';
   import MoonIcon from './moon-icon.svelte';
   import SunIcon from './sun-icon.svelte';
 

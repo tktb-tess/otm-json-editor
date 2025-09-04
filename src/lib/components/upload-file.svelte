@@ -1,29 +1,76 @@
 <script lang="ts">
-  import { otmjsonSchema, type OTMJSON } from '../modules/otmjson';
+  import {
+    otmjsonv2Schema,
+    type OTMJSONv2,
+    parseAndValidate,
+  } from '../modules/otmjson';
   import z from 'zod';
   import OtmjsonEdit from './otmjson-edit.svelte';
+  import { storageKeys } from '../modules/decl';
+
   let inputRef = $state<HTMLInputElement | null>(null);
+
   type FileResult =
     | {
         status: 'empty';
       }
     | {
         status: 'loaded';
-        file: OTMJSON;
+        data: {
+          otmjson: OTMJSONv2;
+          fileName: string;
+        };
       }
     | {
         status: 'error';
         error: Error;
       };
-  let fileResult: FileResult = $state({ status: 'empty' });
+  const init = (): FileResult => {
+    const default_: FileResult = { status: 'empty' };
+
+    const fromStorage = localStorage.getItem(storageKeys.otmjsonData);
+
+    if (!fromStorage) return default_;
+
+    const result = parseAndValidate(fromStorage, otmjsonv2Schema);
+
+    switch (result.status) {
+      case 'succeed': {
+        const { data } = result;
+        return {
+          status: 'loaded',
+          data: {
+            otmjson: data,
+            fileName: 'stored.json',
+          },
+        };
+      }
+      case 'miscError': {
+        console.error(
+          result.error.name,
+          '\n',
+          result.error.message,
+          '\n',
+          result.error.cause
+        );
+        return default_;
+      }
+      case 'zodError': {
+        const e = result.zodError;
+        console.error(e.name, '\n', z.prettifyError(e), '\n', ...e.issues);
+        return default_;
+      }
+    }
+  };
+  
+  let fileResult: FileResult = $state(init());
 
   $effect(() => {
     if (fileResult.status === 'error') {
       if (fileResult.error instanceof z.ZodError) {
-        const e = fileResult.error as z.ZodError<OTMJSON>;
-        const { name, issues } = e;
-        const prettified = z.prettifyError(e);
-        console.error(name, prettified, ...issues);
+        const { name, issues } = fileResult.error;
+        const prettified = z.prettifyError(fileResult.error);
+        console.error(name, '\n', prettified, '\n', ...issues);
       }
     }
   });
@@ -45,18 +92,41 @@
       if (file.type !== 'application/json') {
         fileResult = {
           status: 'error',
-          error: Error('invalid MIME type'),
+          error: Error('invalid MIME type', { cause: file.type }),
         };
         return;
       }
 
-      const otmjson: OTMJSON = await file
+      const result = await file
         .text()
-        .then((text) => otmjsonSchema.parse(JSON.parse(text)));
-      fileResult = {
-        status: 'loaded',
-        file: otmjson,
-      };
+        .then((text) => parseAndValidate(text, otmjsonv2Schema));
+
+      switch (result.status) {
+        case 'succeed': {
+          fileResult = {
+            status: 'loaded',
+            data: {
+              fileName: file.name,
+              otmjson: result.data,
+            },
+          };
+          return;
+        }
+        case 'zodError': {
+          fileResult = {
+            status: 'error',
+            error: result.zodError,
+          };
+          return;
+        }
+        case 'miscError': {
+          fileResult = {
+            status: 'error',
+            error: result.error,
+          };
+          return;
+        }
+      }
     } catch (e) {
       if (e instanceof Error) {
         fileResult = {
@@ -90,8 +160,9 @@
   <p class="text-center">
     編集したいOTM-JSONファイルをアップロードしてください。
   </p>
+  <p class="text-center">現在Version2のみ対応です。</p>
 {:else if fileResult.status === 'loaded'}
-  <OtmjsonEdit input={fileResult.file} />
+  <OtmjsonEdit input={fileResult.data} />
 {:else}
   {@const { error } = fileResult}
   <div class="text-center">

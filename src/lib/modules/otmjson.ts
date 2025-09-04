@@ -35,7 +35,7 @@ export const relationSchema = z.object({
 
 export type Relation = z.infer<typeof relationSchema>;
 
-const wordObj = {
+const wordShape = {
   entry: entrySchema,
   translations: translationSchema.array(),
   tags: z.string().array(),
@@ -44,8 +44,8 @@ const wordObj = {
   relations: relationSchema.array(),
 };
 
-export const wordv1Schema = z.object(wordObj);
-export const wordv2Schema = z.looseObject(wordObj);
+export const wordv1Schema = z.object(wordShape);
+export const wordv2Schema = z.looseObject(wordShape);
 
 export type Wordv1 = z.infer<typeof wordv1Schema>;
 export type Wordv2 = z.infer<typeof wordv2Schema>;
@@ -61,10 +61,12 @@ export const zpdicExampleSchema = z.object({
       id: z.number(),
     })
     .array(),
-  offer: z.object({
-    catalog: z.string(),
-    number: z.number(),
-  }).optional(),
+  offer: z
+    .object({
+      catalog: z.string(),
+      number: z.number(),
+    })
+    .optional(),
 });
 
 export type ZpDICExample = z.infer<typeof zpdicExampleSchema>;
@@ -102,14 +104,41 @@ export type OTMJSONv2 = z.infer<typeof otmjsonv2Schema>;
 export type OTMJSON = z.infer<typeof otmjsonSchema>;
 export type ZpDICOTMJSON = Required<OTMJSONv2>;
 
-export const parseOtmjson = (json: string): OTMJSON | Error => {
-  try {
-    return otmjsonSchema.parse(JSON.parse(json));
-  } catch (e) {
-    if (e instanceof Error) {
-      return e;
-    } else {
-      return Error(`unidentified error: ${e}`);
+export type ValidateResult<T> =
+  | {
+      status: 'succeed';
+      data: T;
     }
+  | {
+      status: 'zodError';
+      zodError: z.ZodError<T>;
+    }
+  | {
+      status: 'miscError';
+      error: Error;
+    };
+
+export const parseAndValidate = <T extends z.ZodType>(
+  json: string,
+  schema: T
+): ValidateResult<z.infer<T>> => {
+  try {
+    const r = schema.safeParse(JSON.parse(json));
+    if (r.success) {
+      return {
+        status: 'succeed',
+        data: r.data,
+      };
+    } else {
+      return {
+        status: 'zodError',
+        zodError: r.error,
+      };
+    }
+  } catch (e) {
+    return {
+      status: 'miscError',
+      error: e instanceof Error ? e : Error('unidentified error', { cause: e }),
+    };
   }
 };

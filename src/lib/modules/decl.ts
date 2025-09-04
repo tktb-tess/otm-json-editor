@@ -10,6 +10,8 @@ export type ColorScheme = z.infer<typeof pgConfSchema.shape.colorScheme>;
 
 export const storageKeys = {
   pageConfig: 'page-config',
+  otmjsonData: 'otmjson-data'
 } as const;
 
 export type StorageKeys = typeof storageKeys;
+
