@@ -9,6 +9,8 @@
     'Source Han Serif JP', 'BIZ UDPMincho', 'Yu Mincho', 'Hiragino Serif',
     'Hiragino Mincho ProN', serif, 'Noto Color Emoji', 'Segoe UI Emoji',
     system-ui;
+  
+  --font-ipa: var(--font-serif);
 
   --color-mnlila: oklch(0.18 0.0957 296);
 }
@@ -31,6 +33,10 @@
   }
 }
 
+@utility user-select-* {
+  user-select: --value('none', 'auto', 'text', 'all');
+}
+
 @utility btn-1 {
   @apply bg-mnlila any-hover:opacity-60 transition-opacity text-white dark:bg-white dark:text-black rounded px-2 py-1;
 }
@@ -41,24 +47,7 @@
     color-scheme: light dark;
   }
   body {
-    @apply bg-slate-50 dark:bg-mnlila min-h-screen transition-colors duration-[120ms];
-  }
-
-  p,
-  div,
-  button,
-  input,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  textarea,
-  pre,
-  code,
-  label {
-    @apply text-black dark:text-white;
+    @apply bg-slate-50 dark:bg-mnlila min-h-screen transition-colors duration-[120ms] text-black dark:text-white;
   }
 
   textarea {
@@ -77,7 +66,7 @@
   input[type='date'],
   input[type='datetime-local'],
   select {
-    @apply bg-white border border-black/20 rounded text-black font-mono;
+    @apply bg-white border border-black/20 rounded text-black font-mono px-1;
   }
 
   button,

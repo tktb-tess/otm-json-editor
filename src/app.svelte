@@ -1,5 +1,5 @@
 <script lang="ts">
-  import UploadFile from './lib/components/upload-file.svelte';
+  import UploadFile from './lib/components/edit-file-form.svelte';
   import ToggleColorSchemeBtn from './lib/components/toggle-color-scheme-btn.svelte';
   import Clock from './lib/components/clock.svelte';
   
@@ -17,6 +17,6 @@
     {import.meta.env.VITE_APP_NAME}
   </h1>
 </header>
-<main class="flex flex-col gap-2 *:max-w-full p-2 w-full max-w-320 mx-auto">
+<main class="flex flex-col gap-2 *:max-w-full p-2 w-full max-w-256 mx-auto">
   <UploadFile />
 </main>

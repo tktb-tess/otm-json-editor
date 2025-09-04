@@ -104,6 +104,13 @@ export type OTMJSONv2 = z.infer<typeof otmjsonv2Schema>;
 export type OTMJSON = z.infer<typeof otmjsonSchema>;
 export type ZpDICOTMJSON = Required<OTMJSONv2>;
 
+export const otmjsonv2WithFileNameSchema = z.object({
+  fileName: z.string(),
+  otmjson: otmjsonv2Schema
+});
+
+export type OTMJSONv2WithFileName = z.infer<typeof otmjsonv2WithFileNameSchema>;
+
 export type ValidateResult<T> =
   | {
       status: 'succeed';
